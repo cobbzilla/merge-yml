@@ -50,7 +50,13 @@ public class YmlMerger {
     private void merge_internal(Map<String, Object> mergedResult, Map<String, Object> yamlContents) {
 
         for (String key : yamlContents.keySet()) {
+
             Object yamlValue = yamlContents.get(key);
+            if (yamlValue == null) {
+                addToMergedResult(mergedResult, key, yamlValue);
+                continue;
+            }
+
             Object existingValue = mergedResult.get(key);
             if (existingValue != null) {
                 if (yamlValue instanceof Map) {
@@ -59,18 +65,18 @@ public class YmlMerger {
                     } else if (existingValue instanceof String) {
                         throw new IllegalArgumentException("Cannot merge complex element into a simple element: "+key);
                     } else {
-                        throw new IllegalArgumentException("Cannot merge element of unknown type: "+key);
+                        throw unknownValueType(key, yamlValue);
                     }
 
                 } else if (yamlValue instanceof String ||
-                           yamlValue instanceof Boolean ||
-                           yamlValue instanceof Double ||
-                           yamlValue instanceof Integer) {
+                        yamlValue instanceof Boolean ||
+                        yamlValue instanceof Double ||
+                        yamlValue instanceof Integer) {
                     LOG.info("overriding value of "+key+" with value "+yamlValue);
                     addToMergedResult(mergedResult, key, yamlValue);
 
                 } else {
-                    throw new IllegalArgumentException("Cannot merge element of unknown type: "+key);
+                    throw unknownValueType(key, yamlValue);
                 }
 
             } else {
@@ -82,10 +88,16 @@ public class YmlMerger {
                     LOG.info("adding new key->value: "+key+"->"+yamlValue);
                     addToMergedResult(mergedResult, key, yamlValue);
                 } else {
-                    throw new IllegalArgumentException("Cannot merge element of unknown type: "+key);
+                    throw unknownValueType(key, yamlValue);
                 }
             }
         }
+    }
+
+    private IllegalArgumentException unknownValueType(String key, Object yamlValue) {
+        final String msg = "Cannot merge element of unknown type: " + key + ": " + yamlValue.getClass().getName();
+        LOG.error(msg);
+        return new IllegalArgumentException(msg);
     }
 
     private Object addToMergedResult(Map<String, Object> mergedResult, String key, Object yamlValue) {

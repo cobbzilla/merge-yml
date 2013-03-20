@@ -9,6 +9,8 @@ import java.io.File;
 import java.util.Map;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
 
 /**
  * (c) Copyright 2013 Jonathan Cobb
@@ -20,12 +22,13 @@ public class YmlMergerTest {
 
     public static final String YML_1 = getResourceFile("test1.yml");
     public static final String YML_2 = getResourceFile("test2.yml");
+    public static final String YML_NULL = getResourceFile("test-null.yml");
 
     private final Yaml yaml = new Yaml();
+    private final YmlMerger merger = new YmlMerger();
 
     @Test
     public void testMerge2Files () throws Exception {
-        YmlMerger merger = new YmlMerger();
         final Map<String, Object> merged = merger.merge(new String[]{YML_1, YML_2});
         Map<String, Object> dbconfig;
         dbconfig = (Map<String, Object>) merged.get("database");
@@ -44,11 +47,17 @@ public class YmlMergerTest {
 
     @Test
     public void testMergeFileIntoSelf () throws Exception {
-        YmlMerger merger = new YmlMerger();
         final Map<String, Object> merged = merger.merge(new String[]{YML_1, YML_1});
         final Map<String, Object> dbconfig = (Map<String, Object>) merged.get("database");
         assertEquals("wrong user", dbconfig.get("user"), "some-user");
         assertEquals("wrong db url", dbconfig.get("url"), "jdbc:mysql://localhost:3306/some-db");
+    }
+
+    @Test
+    public void testNullValue () throws Exception {
+        final Map<String, Object> merged = merger.merge(new String[]{YML_NULL});
+        assertNotNull(merged.get("prop1"));
+        assertNull(merged.get("prop2"));
     }
 
     public static String getResourceFile(String file) {
