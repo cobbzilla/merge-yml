@@ -1,7 +1,11 @@
 #!/bin/bash
 
+ORIG_DIR=`pwd`
+
 THISDIR=`dirname $0`
 cd ${THISDIR}/..
 THISDIR=`pwd`
 
-java -jar target/tout-mergeyml-1.0.0-SNAPSHOT.jar "$@"
+cd ${ORIG_DIR}
+
+java -jar ${THISDIR}/target/mergeyml-1.0.0-SNAPSHOT.jar "$@"
