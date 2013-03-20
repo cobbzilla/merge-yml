@@ -8,7 +8,7 @@ This code is available under the Apache License, version 2: http://www.apache.or
 
 ## Usage:
 
-    ./bin/merge-yml.sh file1.yml file2.yml ...
+    ./bin/merge-yml.sh file1.yml file2.yml ... > merged-result.yml
 
 Files are merged in order, such that files listed later will override files listed earlier.
 
