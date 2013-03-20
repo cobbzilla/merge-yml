@@ -6,3 +6,6 @@ dependency-reduced-pom.xml
 velocity.log
 *~
 merge-yml.log
+target/surefire
+target/surefire-reports
+
