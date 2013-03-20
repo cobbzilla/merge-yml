@@ -1,0 +1,24 @@
+database:
+  # the name of your JDBC driver
+  driverClass: com.mysql.jdbc.Driver
+
+  # the username
+  user: some-user
+
+  # the password
+  password: some-password
+
+  # the JDBC URL
+  url: jdbc:mysql://localhost:3306/some-db
+
+  timeout: 50
+
+  loadFactor: 3.4
+
+  # any properties specific to your JDBC driver:
+  properties:
+    charSet: UTF-8
+
+    hibernate.hbm2ddl.auto: create
+    hibernate.show_sql: true
+    hibernate.dialect: org.hibernate.dialect.MySQL5InnoDBDialect
