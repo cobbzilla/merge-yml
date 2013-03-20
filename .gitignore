@@ -1,6 +1,5 @@
 *.iml
 .idea
-target
 tmp
 logs
 dependency-reduced-pom.xml
