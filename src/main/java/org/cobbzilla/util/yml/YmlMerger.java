@@ -1,6 +1,7 @@
 package org.cobbzilla.util.yml;
 
 import com.github.mustachejava.DefaultMustacheFactory;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
@@ -20,11 +21,17 @@ public class YmlMerger {
     public static final DefaultMustacheFactory DEFAULT_MUSTACHE_FACTORY = new DefaultMustacheFactory();
 
     private final Yaml yaml = new Yaml();
-    private final Map<String, Object> scope;
+    private final Map<String, Object> scope = new HashMap<String, Object>();;
 
     public YmlMerger() {
-        scope = new HashMap<String, Object>();
-        final Map<String, String> env = System.getenv();
+        init(System.getenv());
+    }
+
+    public YmlMerger(Map<String, String> env) {
+        init(env);
+    }
+
+    private void init(Map<String, String> env) {
         for (String varname : env.keySet()) {
             scope.put(varname, env.get(varname));
         }
@@ -36,7 +43,10 @@ public class YmlMerger {
             InputStream in = null;
             try {
                 in = new FileInputStream(file);
-                final Map<String, Object> yamlContents = (Map<String, Object>) yaml.load(in);
+                String entireFile = IOUtils.toString(in);
+                final StringWriter writer = new StringWriter(entireFile.length() + 10);
+                DEFAULT_MUSTACHE_FACTORY.compile(new StringReader(entireFile), "mergeyml_"+System.currentTimeMillis()).execute(writer, scope);
+                final Map<String, Object> yamlContents = (Map<String, Object>) yaml.load(writer.toString());
                 merge_internal(mergedResult, yamlContents);
                 LOG.info("loaded YML from "+file+": "+yamlContents);
 
@@ -101,15 +111,7 @@ public class YmlMerger {
     }
 
     private Object addToMergedResult(Map<String, Object> mergedResult, String key, Object yamlValue) {
-        if (yamlValue instanceof String) {
-            final String value = yamlValue.toString();
-            final StringWriter writer = new StringWriter(value.length() + 10);
-            DEFAULT_MUSTACHE_FACTORY.compile(new StringReader(value), key+"_"+System.currentTimeMillis()).execute(writer, scope);
-            return mergedResult.put(key, writer.toString());
-
-        } else {
-            return mergedResult.put(key, yamlValue);
-        }
+        return mergedResult.put(key, yamlValue);
     }
 
     public String mergeToString(String[] files) throws IOException {

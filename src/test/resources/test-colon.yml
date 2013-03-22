@@ -1,0 +1,4 @@
+memcache:
+  one_key: value1
+  another_key: {{ENV_VAR}}:22133
+  some_other_key: value2

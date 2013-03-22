@@ -81,10 +81,17 @@
             <version>1.12</version>
         </dependency>
 
+        <!-- mustache templates -->
         <dependency>
             <groupId>com.github.spullara.mustache.java</groupId>
             <artifactId>compiler</artifactId>
             <version>0.8.10</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>1.4</version>
         </dependency>
     </dependencies>
 

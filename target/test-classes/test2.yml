@@ -1,6 +1,0 @@
-database:
-  # the username
-  user: alternate-user
-
-  # the password
-  password: alternate-password

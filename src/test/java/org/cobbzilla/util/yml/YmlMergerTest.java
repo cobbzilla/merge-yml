@@ -6,11 +6,10 @@ import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.Map;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNull;
+import static junit.framework.Assert.*;
 
 /**
  * (c) Copyright 2013 Jonathan Cobb
@@ -23,6 +22,7 @@ public class YmlMergerTest {
     public static final String YML_1 = getResourceFile("test1.yml");
     public static final String YML_2 = getResourceFile("test2.yml");
     public static final String YML_NULL = getResourceFile("test-null.yml");
+    public static final String YML_COLON = getResourceFile("test-colon.yml");
 
     private final Yaml yaml = new Yaml();
     private final YmlMerger merger = new YmlMerger();
@@ -58,6 +58,15 @@ public class YmlMergerTest {
         final Map<String, Object> merged = merger.merge(new String[]{YML_NULL});
         assertNotNull(merged.get("prop1"));
         assertNull(merged.get("prop2"));
+    }
+
+    @Test
+    public void testSubstitutionValueWithColon () throws Exception {
+        final Map<String, Object> merged = new YmlMerger(Collections.singletonMap("ENV_VAR", "localhost")).merge(new String[]{YML_COLON});
+        final Map<String, Object> hash = (Map<String, Object>) merged.get("memcache");
+        assertEquals(hash.get("one_key"), "value1");
+        assertEquals(hash.get("another_key"), "localhost:22133");
+        assertEquals(hash.get("some_other_key"), "value2");
     }
 
     public static String getResourceFile(String file) {
