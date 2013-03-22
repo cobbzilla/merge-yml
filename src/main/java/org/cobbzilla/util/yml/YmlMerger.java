@@ -42,11 +42,18 @@ public class YmlMerger {
         for (String file : files) {
             InputStream in = null;
             try {
+                // read the file into a String
                 in = new FileInputStream(file);
-                String entireFile = IOUtils.toString(in);
+                final String entireFile = IOUtils.toString(in);
+
+                // substitute variables
                 final StringWriter writer = new StringWriter(entireFile.length() + 10);
                 DEFAULT_MUSTACHE_FACTORY.compile(new StringReader(entireFile), "mergeyml_"+System.currentTimeMillis()).execute(writer, scope);
+
+                // load the YML file
                 final Map<String, Object> yamlContents = (Map<String, Object>) yaml.load(writer.toString());
+
+                // merge into results map
                 merge_internal(mergedResult, yamlContents);
                 LOG.info("loaded YML from "+file+": "+yamlContents);
 
