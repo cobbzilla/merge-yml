@@ -8,7 +8,6 @@ velocity.log
 merge-yml.log
 target/surefire
 target/surefire-reports
-
 target/classes
 target/test-classes
 target/original-mergeyml-1.0.0-SNAPSHOT.jar
