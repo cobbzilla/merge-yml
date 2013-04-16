@@ -7,9 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * (c) Copyright 2013 Jonathan Cobb
@@ -28,7 +26,7 @@ public class YmlMerger {
     }
 
     public YmlMerger(Map<String, String> env) {
-        init(env);
+        if (env != null) init(env);
     }
 
     private void init(Map<String, String> env) {
@@ -86,6 +84,7 @@ public class YmlMerger {
                     }
 
                 } else if (yamlValue instanceof String ||
+                        yamlValue instanceof List ||
                         yamlValue instanceof Boolean ||
                         yamlValue instanceof Double ||
                         yamlValue instanceof Integer) {
@@ -98,6 +97,7 @@ public class YmlMerger {
 
             } else {
                 if (yamlValue instanceof Map ||
+                        yamlValue instanceof List ||
                         yamlValue instanceof String ||
                         yamlValue instanceof Boolean||
                         yamlValue instanceof Integer||
@@ -123,6 +123,10 @@ public class YmlMerger {
 
     public String mergeToString(String[] files) throws IOException {
         return toString(merge(files));
+    }
+
+    public String mergeToString(List<String> files) throws IOException {
+        return toString(merge(files.toArray(new String[files.size()])));
     }
 
     public String toString(Map<String, Object> merged) {

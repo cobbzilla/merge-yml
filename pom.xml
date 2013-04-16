@@ -26,8 +26,6 @@
     <properties>
         <org.slf4j.version>1.6.4</org.slf4j.version>
         <junit.version>4.8</junit.version>
-        <jetty.version>8.1.2.v20120308</jetty.version>
-        <httpclient.version>4.2.2</httpclient.version>
     </properties>
 
     <repositories>
