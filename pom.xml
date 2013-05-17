@@ -30,6 +30,12 @@
         <httpclient.version>4.2.2</httpclient.version>
     </properties>
 
+    <scm>
+        <url>http://github.com/cobbzilla/merge-yml</url>
+        <connection>scm:git:git@github.com:cobbzilla/merge-yml.git</connection>
+        <developerConnection>scm:git:git@github.com:cobbzilla/merge-yml.git</developerConnection>
+    </scm>
+
     <repositories>
         <!-- needed for snake-yaml -->
         <repository>
