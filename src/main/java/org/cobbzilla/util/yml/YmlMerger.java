@@ -7,7 +7,10 @@ import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * (c) Copyright 2013 Jonathan Cobb
@@ -64,6 +67,8 @@ public class YmlMerger {
 
     private void merge_internal(Map<String, Object> mergedResult, Map<String, Object> yamlContents) {
 
+        if (yamlContents == null) return;
+
         for (String key : yamlContents.keySet()) {
 
             Object yamlValue = yamlContents.get(key);
@@ -83,11 +88,11 @@ public class YmlMerger {
                         throw unknownValueType(key, yamlValue);
                     }
 
-                } else if (yamlValue instanceof String ||
-                        yamlValue instanceof List ||
-                        yamlValue instanceof Boolean ||
-                        yamlValue instanceof Double ||
-                        yamlValue instanceof Integer) {
+                } else if (yamlValue instanceof List
+                        || yamlValue instanceof String
+                        || yamlValue instanceof Boolean
+                        || yamlValue instanceof Double
+                        || yamlValue instanceof Integer) {
                     LOG.info("overriding value of "+key+" with value "+yamlValue);
                     addToMergedResult(mergedResult, key, yamlValue);
 
@@ -96,12 +101,12 @@ public class YmlMerger {
                 }
 
             } else {
-                if (yamlValue instanceof Map ||
-                        yamlValue instanceof List ||
-                        yamlValue instanceof String ||
-                        yamlValue instanceof Boolean||
-                        yamlValue instanceof Integer||
-                        yamlValue instanceof Double) {
+                if (yamlValue instanceof Map
+                        || yamlValue instanceof List
+                        || yamlValue instanceof String
+                        || yamlValue instanceof Boolean
+                        || yamlValue instanceof Integer
+                        || yamlValue instanceof Double) {
                     LOG.info("adding new key->value: "+key+"->"+yamlValue);
                     addToMergedResult(mergedResult, key, yamlValue);
                 } else {

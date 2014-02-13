@@ -4,15 +4,14 @@
   (c) Copyright 2013 Jonathan Cobb
   This code is available under the Apache License, version 2: http://www.apache.org/licenses/LICENSE-2.0.html
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.cobbzilla</groupId>
-    <artifactId>mergeyml</artifactId>
-    <name>mergeyml</name>
-    <version>1.0.0-SNAPSHOT</version>
+    <artifactId>merge-yml</artifactId>
+    <name>merge-yml</name>
+    <version>1.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <licenses>
@@ -27,6 +26,12 @@
         <org.slf4j.version>1.6.4</org.slf4j.version>
         <junit.version>4.8</junit.version>
     </properties>
+
+    <scm>
+        <url>http://github.com/cobbzilla/merge-yml</url>
+        <connection>scm:git:git@github.com:cobbzilla/merge-yml.git</connection>
+        <developerConnection>scm:git:git@github.com:cobbzilla/merge-yml.git</developerConnection>
+    </scm>
 
     <repositories>
         <!-- needed for snake-yaml -->
@@ -94,6 +99,17 @@
     </dependencies>
 
     <build>
+        <resources>
+            <resource>
+                <directory>${project.basedir}/src/main/scripts</directory>
+                <includes>
+                    <include>*.sh</include>
+                </includes>
+                <filtering>true</filtering>
+                <targetPath>${project.basedir}/bin</targetPath>
+            </resource>
+        </resources>
+
         <plugins>
             <!-- Force Java 1.6 at all times -->
             <plugin>
@@ -105,6 +121,25 @@
                     <target>1.6</target>
                     <showWarnings>true</showWarnings>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.6</version>
+                <executions>
+                    <execution>
+                        <phase>process-resources</phase>
+                        <configuration>
+                            <target>
+                                <chmod file="${project.basedir}/bin/*.sh" perm="755" />
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
 
             <plugin>
@@ -141,7 +176,21 @@
                 </executions>
             </plugin>
 
+            <plugin>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>2.5</version>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>${project.basedir}/bin</directory>
+                            <includes>
+                                <include>*.sh</include>
+                            </includes>
+                        </fileset>
+                    </filesets>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
-
 </project>
