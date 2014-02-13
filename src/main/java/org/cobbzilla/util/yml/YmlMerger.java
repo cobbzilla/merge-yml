@@ -124,6 +124,10 @@ public class YmlMerger {
         return mergedResult.put(key, yamlValue);
     }
 
+    public String mergeToString(List<String> files) throws IOException {
+        return mergeToString(files.toArray(new String[files.size()]));
+    }
+
     public String mergeToString(String[] files) throws IOException {
         return toString(merge(files));
     }
