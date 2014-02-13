@@ -9,6 +9,7 @@ import org.yaml.snakeyaml.Yaml;
 import java.io.*;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -85,10 +86,11 @@ public class YmlMerger {
                         throw unknownValueType(key, yamlValue);
                     }
 
-                } else if (yamlValue instanceof String ||
-                        yamlValue instanceof Boolean ||
-                        yamlValue instanceof Double ||
-                        yamlValue instanceof Integer) {
+		} else if (yamlValue instanceof List
+                           || yamlValue instanceof String
+                           || yamlValue instanceof Boolean
+                           || yamlValue instanceof Double
+                           || yamlValue instanceof Integer) {
                     LOG.info("overriding value of "+key+" with value "+yamlValue);
                     addToMergedResult(mergedResult, key, yamlValue);
 
@@ -97,11 +99,12 @@ public class YmlMerger {
                 }
 
             } else {
-                if (yamlValue instanceof Map ||
-                        yamlValue instanceof String ||
-                        yamlValue instanceof Boolean||
-                        yamlValue instanceof Integer||
-                        yamlValue instanceof Double) {
+                if (yamlValue instanceof Map
+                    || yamlValue instanceof List
+                    || yamlValue instanceof String
+                    || yamlValue instanceof Boolean
+                    || yamlValue instanceof Integer
+                    || yamlValue instanceof Double) {
                     LOG.info("adding new key->value: "+key+"->"+yamlValue);
                     addToMergedResult(mergedResult, key, yamlValue);
                 } else {
