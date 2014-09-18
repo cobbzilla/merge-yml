@@ -25,6 +25,7 @@ This code is available under the Apache License, version 2: http://www.apache.or
     <properties>
         <org.slf4j.version>1.6.4</org.slf4j.version>
         <junit.version>4.8</junit.version>
+        <guava.version>17.0</guava.version>
     </properties>
 
     <scm>
@@ -89,6 +90,18 @@ This code is available under the Apache License, version 2: http://www.apache.or
             <groupId>com.github.spullara.mustache.java</groupId>
             <artifactId>compiler</artifactId>
             <version>0.8.16</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.google.guava</groupId>
+                    <artifactId>guava</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
         </dependency>
 
         <dependency>
