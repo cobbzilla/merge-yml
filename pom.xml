@@ -5,10 +5,14 @@
 This code is available under the Apache License, version 2: http://www.apache.org/licenses/LICENSE-2.0.html
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.cobbzilla</groupId>
+    <parent>
+        <groupId>org.cobbzilla</groupId>
+        <artifactId>cobbzilla-parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
     <artifactId>merge-yml</artifactId>
     <name>merge-yml</name>
     <version>1.0.1-SNAPSHOT</version>
@@ -22,26 +26,11 @@ This code is available under the Apache License, version 2: http://www.apache.or
         </license>
     </licenses>
 
-    <properties>
-        <org.slf4j.version>1.6.4</org.slf4j.version>
-        <junit.version>4.8</junit.version>
-        <guava.version>17.0</guava.version>
-    </properties>
-
     <scm>
         <url>http://github.com/cobbzilla/merge-yml</url>
         <connection>scm:git:git@github.com:cobbzilla/merge-yml.git</connection>
         <developerConnection>scm:git:git@github.com:cobbzilla/merge-yml.git</developerConnection>
     </scm>
-
-    <repositories>
-        <!-- needed for snake-yaml -->
-        <repository>
-            <id>Sonatype-public</id>
-            <name>SnakeYAML repository</name>
-            <url>http://oss.sonatype.org/content/groups/public/</url>
-        </repository>
-    </repositories>
 
     <dependencies>
 
@@ -49,24 +38,24 @@ This code is available under the Apache License, version 2: http://www.apache.or
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>${org.slf4j.version}</version>
+            <version>${slf4j.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jcl-over-slf4j</artifactId>
-            <version>${org.slf4j.version}</version>
+            <version>${slf4j.version}</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
-            <version>${org.slf4j.version}</version>
+            <version>${slf4j.version}</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
-            <version>1.2.16</version>
+            <version>${log4j.version}</version>
             <scope>runtime</scope>
         </dependency>
 
@@ -82,7 +71,7 @@ This code is available under the Apache License, version 2: http://www.apache.or
         <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
-            <version>1.12</version>
+            <version>${snakeyaml.version}</version>
         </dependency>
 
         <!-- mustache templates -->
@@ -124,18 +113,6 @@ This code is available under the Apache License, version 2: http://www.apache.or
         </resources>
 
         <plugins>
-            <!-- Force Java 1.6 at all times -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
-                <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
-                    <showWarnings>true</showWarnings>
-                </configuration>
-            </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
