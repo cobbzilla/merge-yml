@@ -6,7 +6,11 @@ Merge multiple YML files into a single file, and substitute for any environment 
 (c) Copyright 2013 Jonathan Cobb.
 This code is available under the Apache License, version 2: http://www.apache.org/licenses/LICENSE-2.0.html
 
-## Usage:
+## Build
+
+    mvn -P uberjar package
+
+## Usage
 
     ./bin/merge-yml.sh file1.yml file2.yml ... > merged-result.yml
 
