@@ -59,14 +59,6 @@ This code is available under the Apache License, version 2: http://www.apache.or
             <scope>runtime</scope>
         </dependency>
 
-        <!-- Testing -->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
-
         <!-- YAML config parsing -->
         <dependency>
             <groupId>org.yaml</groupId>
