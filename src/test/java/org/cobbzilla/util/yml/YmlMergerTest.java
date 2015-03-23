@@ -84,11 +84,14 @@ public class YmlMergerTest {
     public void testMerge2Lists () throws Exception {
         final Map<String, Object> merged = merger.merge(new String[]{MERGEYML_1, MERGEYML_2});
         Map<String, Object> hash1 = (Map<String, Object>) merged.get("hashlevel1");
-        List<Object> list1 = (List<Object>) hash1.get("hashlevel2");
+        List<Object> list1 = (List<Object>) hash1.get("listlevel2");
         assertEquals("NotEnoughEntries", list1.size(), 2);
-        //Map<String, Object> optionSet0 = (Map<String, Object>) list1.get(0);
-        //Map<String, Object> optionSet1 = (Map<String, Object>) list1.get(0);
-        
+        Map<String, Object> optionSet1 = (Map<String, Object>) list1.get(0);
+        Map<String, Object> optionSet2 = (Map<String, Object>) list1.get(1);
+        assertEquals(optionSet1.get("namespace"), "namespace1");
+        assertEquals(optionSet1.get("option_name"), "option1");
+        assertEquals(optionSet2.get("namespace"), "namespace2");
+        assertEquals(optionSet2.get("option_name"), "option2");
     }
 
     public static String getResourceFile(String file) {

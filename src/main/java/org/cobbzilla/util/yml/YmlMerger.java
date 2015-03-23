@@ -90,9 +90,10 @@ public class YmlMerger {
                     } else {
                         throw unknownValueType(key, yamlValue);
                     }
+                } else if (yamlValue instanceof List) {
+                	mergeLists(mergedResult, key, yamlValue);
 
-                } else if (yamlValue instanceof List
-                        || yamlValue instanceof String
+                } else if (yamlValue instanceof String
                         || yamlValue instanceof Boolean
                         || yamlValue instanceof Double
                         || yamlValue instanceof Integer) {
@@ -127,6 +128,16 @@ public class YmlMerger {
 
     private Object addToMergedResult(Map<String, Object> mergedResult, String key, Object yamlValue) {
         return mergedResult.put(key, yamlValue);
+    }
+    
+    @SuppressWarnings("unchecked")
+	private void mergeLists(Map<String, Object> mergedResult, String key, Object yamlValue) {
+    	if (! (yamlValue instanceof List && mergedResult.get(key) instanceof List)) {
+    		throw new IllegalArgumentException("Cannot merge a list with a non-list: "+key);
+    	}
+    	
+    	List<Object> originalList = (List<Object>) mergedResult.get(key);
+    	originalList.addAll((List<Object>) yamlValue);
     }
 
     public String mergeToString(String[] files) throws IOException {

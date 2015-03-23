@@ -1,4 +1,4 @@
 hashlevel1: 
-  hashlevel2:
-    - namespace: listnamespace1
-      option_name: listoption1
+  listlevel2:
+    - namespace: namespace1
+      option_name: option1
