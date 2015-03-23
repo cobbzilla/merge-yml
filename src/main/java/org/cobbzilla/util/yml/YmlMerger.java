@@ -1,6 +1,7 @@
 package org.cobbzilla.util.yml;
 
 import com.github.mustachejava.DefaultMustacheFactory;
+
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +39,8 @@ public class YmlMerger {
         }
     }
 
-    public Map<String, Object> merge(String[] files) throws IOException {
+    @SuppressWarnings("unchecked")
+	public Map<String, Object> merge(String[] files) throws IOException {
         Map<String, Object> mergedResult = new LinkedHashMap<String, Object>();
         for (String file : files) {
             InputStream in = null;
@@ -65,7 +67,8 @@ public class YmlMerger {
         return mergedResult;
     }
 
-    private void merge_internal(Map<String, Object> mergedResult, Map<String, Object> yamlContents) {
+    @SuppressWarnings("unchecked")
+	private void merge_internal(Map<String, Object> mergedResult, Map<String, Object> yamlContents) {
 
         if (yamlContents == null) return;
 

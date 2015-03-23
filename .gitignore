@@ -9,3 +9,7 @@ merge-yml.log
 target
 bin
 .project
+
+*.prefs
+
+.classpath

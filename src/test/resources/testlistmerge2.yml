@@ -1,0 +1,4 @@
+hashlevel1: 
+  hashlevel2:
+    - namespace: listnamespace2
+      option_name: listoption2
