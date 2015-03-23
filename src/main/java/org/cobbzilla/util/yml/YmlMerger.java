@@ -1,6 +1,7 @@
 package org.cobbzilla.util.yml;
 
 import com.github.mustachejava.DefaultMustacheFactory;
+
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +39,8 @@ public class YmlMerger {
         }
     }
 
-    public Map<String, Object> merge(String[] files) throws IOException {
+    @SuppressWarnings("unchecked")
+	public Map<String, Object> merge(String[] files) throws IOException {
         Map<String, Object> mergedResult = new LinkedHashMap<String, Object>();
         for (String file : files) {
             InputStream in = null;
@@ -65,7 +67,8 @@ public class YmlMerger {
         return mergedResult;
     }
 
-    private void merge_internal(Map<String, Object> mergedResult, Map<String, Object> yamlContents) {
+    @SuppressWarnings("unchecked")
+	private void merge_internal(Map<String, Object> mergedResult, Map<String, Object> yamlContents) {
 
         if (yamlContents == null) return;
 
@@ -87,9 +90,10 @@ public class YmlMerger {
                     } else {
                         throw unknownValueType(key, yamlValue);
                     }
+                } else if (yamlValue instanceof List) {
+                	mergeLists(mergedResult, key, yamlValue);
 
-                } else if (yamlValue instanceof List
-                        || yamlValue instanceof String
+                } else if (yamlValue instanceof String
                         || yamlValue instanceof Boolean
                         || yamlValue instanceof Double
                         || yamlValue instanceof Integer) {
@@ -124,6 +128,16 @@ public class YmlMerger {
 
     private Object addToMergedResult(Map<String, Object> mergedResult, String key, Object yamlValue) {
         return mergedResult.put(key, yamlValue);
+    }
+    
+    @SuppressWarnings("unchecked")
+	private void mergeLists(Map<String, Object> mergedResult, String key, Object yamlValue) {
+    	if (! (yamlValue instanceof List && mergedResult.get(key) instanceof List)) {
+    		throw new IllegalArgumentException("Cannot merge a list with a non-list: "+key);
+    	}
+    	
+    	List<Object> originalList = (List<Object>) mergedResult.get(key);
+    	originalList.addAll((List<Object>) yamlValue);
     }
 
     public String mergeToString(String[] files) throws IOException {
