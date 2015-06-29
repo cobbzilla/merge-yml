@@ -11,14 +11,9 @@
         </layout>
     </appender>
 
-    <!-- our loggers -->
-    <logger name="com.tout">
-        <level value="info" />
-    </logger>
-
     <!-- Root Logger -->
     <root>
-        <priority value="info" />
+        <priority value="warn" />
         <appender-ref ref="console" />
     </root>
 

@@ -88,56 +88,6 @@ This code is available under the Apache License, version 2: http://www.apache.or
         </dependency>
     </dependencies>
 
-    <build>
-        <resources>
-            <resource>
-                <directory>${project.basedir}/src/main/scripts</directory>
-                <includes>
-                    <include>*.sh</include>
-                </includes>
-                <filtering>true</filtering>
-                <targetPath>${project.basedir}/bin</targetPath>
-            </resource>
-        </resources>
-
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <version>1.6</version>
-                <executions>
-                    <execution>
-                        <phase>process-resources</phase>
-                        <configuration>
-                            <target>
-                                <chmod file="${project.basedir}/bin/*.sh" perm="755" />
-                            </target>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <artifactId>maven-clean-plugin</artifactId>
-                <version>2.5</version>
-                <configuration>
-                    <filesets>
-                        <fileset>
-                            <directory>${project.basedir}/bin</directory>
-                            <includes>
-                                <include>*.sh</include>
-                            </includes>
-                        </fileset>
-                    </filesets>
-                </configuration>
-            </plugin>
-
-        </plugins>
-    </build>
-
     <profiles>
         <profile>
             <id>uberjar</id>
