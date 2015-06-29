@@ -9,6 +9,10 @@ This code is available under the Apache License, version 2: http://www.apache.or
 ## Build
 
     mvn -P uberjar package
+    
+Requires 'maven' build automation tool.
+
+Install maven on OS X using [homebrew](http://brew.sh/): `brew install maven`
 
 ## Usage
 
