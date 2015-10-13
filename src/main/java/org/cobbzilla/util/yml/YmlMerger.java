@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * (c) Copyright 2013 Jonathan Cobb
+ * (c) Copyright 2013-2015 Jonathan Cobb
  * This code is available under the Apache License, version 2: http://www.apache.org/licenses/LICENSE-2.0.html
  */
 public class YmlMerger {
@@ -25,13 +25,9 @@ public class YmlMerger {
     private final Yaml yaml = new Yaml();
     private final Map<String, Object> scope = new HashMap<String, Object>();;
 
-    public YmlMerger() {
-        init(System.getenv());
-    }
+    public YmlMerger() { init(System.getenv()); }
 
-    public YmlMerger(Map<String, String> env) {
-        if (env != null) init(env);
-    }
+    public YmlMerger(Map<String, String> env) { if (env != null) init(env); }
 
     private void init(Map<String, String> env) {
         for (String varname : env.keySet()) {
