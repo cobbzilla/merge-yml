@@ -39,7 +39,7 @@ This code is available under the Apache License, version 2: http://www.apache.or
         <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
-            <version>1.15</version>
+            <version>1.19</version>
         </dependency>
         
         <!-- testing -->
