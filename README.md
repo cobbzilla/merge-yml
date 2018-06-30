@@ -17,7 +17,7 @@ Requires [Maven build automation tool](http://maven.apache.org/).
 
 ## Usage
 
-    ./bin/merge-yml.sh file1.yml file2.yml ... > merged-result.yml
+    ./bin/yaml-merge.sh file1.yaml file2.yaml ... > merged-result.yaml
 
 Files are merged in order, such that files listed later will override files listed earlier.
 
@@ -28,4 +28,4 @@ mustache-style syntax, for example:
 
     callbackUrl: http://www.{{DEPLOY_HOST_NAME}}.example.com:8102/my_callback
 
-Then make sure you've exported the `DEPLOY_HOST_NAME` environment variable to whatever place you invoke `merge-yml` from.
+Then make sure you've exported the `DEPLOY_HOST_NAME` environment variable to whatever place you invoke `yaml-merge` from.
