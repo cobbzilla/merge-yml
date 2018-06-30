@@ -1,18 +1,19 @@
 merge-yml
 =========
 
-Merge multiple YML files into a single file, and substitute for any environment variables found
+Merges multiple YML files into a single file, and substitutes environment variables found as `{{VARIABLE_NAME}}`.
 
-(c) Copyright 2013 Jonathan Cobb.
+This is a fork by Ondrej Zizka, with upgraded dependencies.
+
+Original code from 2013 by Jonathan Cobb.
 This code is available under the Apache License, version 2: http://www.apache.org/licenses/LICENSE-2.0.html
 
 ## Build
 
     mvn -P uberjar package
     
-Requires 'maven' build automation tool.
+Requires [Maven build automation tool](http://maven.apache.org/).
 
-Install maven on OS X using [homebrew](http://brew.sh/): `brew install maven`
 
 ## Usage
 
@@ -20,12 +21,11 @@ Install maven on OS X using [homebrew](http://brew.sh/): `brew install maven`
 
 Files are merged in order, such that files listed later will override files listed earlier.
 
-The merged result is written to stdout. Logs (for info & errors) are written to stderr.
+The merged result is written to `stdout`. Logs (for info & errors) are written to `stderr`.
 
-Within the YML files to be merged, you may include references to system environment variables using
+Within the YML files to be merged, you may include references to environment variables using
 mustache-style syntax, for example:
 
     callbackUrl: http://www.{{DEPLOY_HOST_NAME}}.example.com:8102/my_callback
 
-Then make sure you've exported the DEPLOY_HOST_NAME environment variable to whatever place you invoke
-merge-yml from.
+Then make sure you've exported the `DEPLOY_HOST_NAME` environment variable to whatever place you invoke `merge-yml` from.
