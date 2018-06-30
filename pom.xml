@@ -10,6 +10,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <yamlMerge.mainClass>org.cobbzilla.util.yml.main.MergeYml</yamlMerge.mainClass>
     </properties>
 
     <licenses>
@@ -110,6 +111,10 @@
     <profiles>
         <profile>
             <id>uberjar</id>
+            <activation><property><name>release</name></property></activation>
+            <properties>
+                <project.build.testResourceDirectory>${project.build.testSourceDirectory}/../resources/</project.build.testResourceDirectory>
+            </properties>
             <build>
                 <plugins>
                     <plugin>
@@ -124,7 +129,7 @@
                                     <dependencyReducedPomLocation>${project.build.directory}/dependency-reduced-pom.xml</dependencyReducedPomLocation>
                                     <transformers>
                                         <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                            <mainClass>org.cobbzilla.util.yml.main.MergeYml</mainClass>
+                                            <mainClass>${yamlMerge.mainClass}</mainClass>
                                         </transformer>
                                     </transformers>
                                     <!-- Exclude signed jars to avoid errors, see: http://stackoverflow.com/a/6743609/1251543 -->
@@ -142,6 +147,64 @@
                             </execution>
                         </executions>
                     </plugin>
+
+                    <!-- Build an executable JAR -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jar-plugin</artifactId>
+                        <version>3.1.0</version>
+                        <configuration>
+                            <archive>
+                                <manifest>
+                                    <!--
+                                    <addClasspath>true</addClasspath>
+                                    <classpathPrefix>lib/</classpathPrefix>
+                                    -->
+                                    <mainClass>${yamlMerge.mainClass}</mainClass>
+                                </manifest>
+                            </archive>
+                        </configuration>
+                    </plugin>
+
+                    <!-- Tests the big jar -->
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>1.6.0</version>
+                        <executions>
+                            <execution>
+                                <id>testMerge-1-2</id>
+                                <phase>integration-test</phase>
+                                <goals><goal>exec</goal></goals>
+                                <configuration>
+                                    <arguments>
+                                        <argument>-jar</argument>
+                                        <argument>${project.build.directory}/${project.build.finalName}.jar</argument>
+                                        <argument> ${project.build.testResourceDirectory}/test1.yaml</argument>
+                                        <argument> ${project.build.testResourceDirectory}/test2.yaml</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>testMerge-list</id>
+                                <phase>integration-test</phase>
+                                <goals><goal>exec</goal></goals>
+                                <configuration>
+                                    <arguments>
+                                        <argument>-jar</argument>
+                                        <argument>${project.build.directory}/${project.build.finalName}.jar</argument>
+                                        <argument> ${project.build.testResourceDirectory}/testListMerge1.yaml</argument>
+                                        <argument> ${project.build.testResourceDirectory}/testListMerge2.yaml</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <executable>java</executable>
+                            <workingDirectory>/tmp</workingDirectory>
+                        </configuration>
+                    </plugin>
+
                 </plugins>
             </build>
         </profile>
@@ -164,6 +227,14 @@
                         <executions><execution><id>attach-javadocs</id><goals><goal>jar</goal></goals></execution></executions>
                     </plugin>
 
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>test</id>
+            <build>
+                <plugins>
                 </plugins>
             </build>
         </profile>

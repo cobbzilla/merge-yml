@@ -47,14 +47,14 @@ public class YmlMerger {
 
                 // substitute variables
                 final StringWriter writer = new StringWriter(entireFile.length() + 10);
-                DEFAULT_MUSTACHE_FACTORY.compile(new StringReader(entireFile), "mergeyml_"+System.currentTimeMillis()).execute(writer, scope);
+                DEFAULT_MUSTACHE_FACTORY.compile(new StringReader(entireFile), "yaml-merge-"+System.currentTimeMillis()).execute(writer, scope);
 
-                // load the YML file
+                // load the YAML file
                 final Map<String, Object> yamlContents = (Map<String, Object>) yaml.load(writer.toString());
 
                 // merge into results map
                 merge_internal(mergedResult, yamlContents);
-                LOG.info("loaded YML from "+file+": "+yamlContents);
+                LOG.info("Loaded YAML from "+file+": "+yamlContents);
 
             } finally {
                 if (in != null) in.close();
@@ -125,13 +125,13 @@ public class YmlMerger {
     private Object addToMergedResult(Map<String, Object> mergedResult, String key, Object yamlValue) {
         return mergedResult.put(key, yamlValue);
     }
-    
+
     @SuppressWarnings("unchecked")
 	private void mergeLists(Map<String, Object> mergedResult, String key, Object yamlValue) {
     	if (! (yamlValue instanceof List && mergedResult.get(key) instanceof List)) {
     		throw new IllegalArgumentException("Cannot merge a list with a non-list: "+key);
     	}
-    	
+
     	List<Object> originalList = (List<Object>) mergedResult.get(key);
     	originalList.addAll((List<Object>) yamlValue);
     }

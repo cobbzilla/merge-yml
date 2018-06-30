@@ -1,7 +1,9 @@
-merge-yml
-=========
 
-Merges multiple YML files into a single file, and substitutes environment variables found as `{{VARIABLE_NAME}}`.
+  YAML Merge
+==============
+
+
+Merges multiple YAML files into a single file, and substitutes environment variables found as `{{VARIABLE_NAME}}`.
 
 This is a fork by Ondrej Zizka, with upgraded dependencies.
 
@@ -23,7 +25,7 @@ Files are merged in order, such that files listed later will override files list
 
 The merged result is written to `stdout`. Logs (for info & errors) are written to `stderr`.
 
-Within the YML files to be merged, you may include references to environment variables using
+Within the YAML files to be merged, you may include references to environment variables using
 mustache-style syntax, for example:
 
     callbackUrl: http://www.{{DEPLOY_HOST_NAME}}.example.com:8102/my_callback

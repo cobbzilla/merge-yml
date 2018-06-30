@@ -16,9 +16,9 @@ if [ -z "${1}" ] ; then
   die "No files to merge"
 fi
 
-THISDIR=$(cd $(dirname $0) && pwd)
-TARGET=$(cd ${THISDIR}/../target && pwd)
-JAR=$(ls -1 ${TARGET}/merge-yml-*.jar | head -1)
+THIS_DIR=$(cd $(dirname $0) && pwd)
+TARGET=$(cd ${THIS_DIR}/../target && pwd)
+JAR=$(ls -1 ${TARGET}/yaml-merge-*.jar | head -1)
 if [ -z "${JAR}" ] ; then
   die "No jar matching yaml-merge-*.jar found in ${TARGET}"
 fi
