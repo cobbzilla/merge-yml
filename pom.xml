@@ -1,19 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<!--
-(c) Copyright 2013-2014 Jonathan Cobb
-This code is available under the Apache License, version 2: http://www.apache.org/licenses/LICENSE-2.0.html
--->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>merge-yml</artifactId>
+
     <groupId>org.cobbzilla</groupId>
-    <name>merge-yml</name>
+    <artifactId>merge-yml</artifactId>
     <version>1.0.1-SNAPSHOT</version>
-    <packaging>jar</packaging>
 
     <licenses>
         <license>
+            <comments>
+                (c) Copyright 2013-2014 Jonathan Cobb
+                This code is available under the Apache License, version 2: http://www.apache.org/licenses/LICENSE-2.0.html
+            </comments>
             <name>The Apache Software License, Version 2.0</name>
             <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
             <distribution>repo</distribution>
@@ -26,12 +24,12 @@ This code is available under the Apache License, version 2: http://www.apache.or
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.7.10</version>
+            <version>1.7.25</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jcl-over-slf4j</artifactId>
-            <version>1.7.10</version>
+            <version>1.7.25</version>
             <scope>runtime</scope>
         </dependency>
 
@@ -41,7 +39,7 @@ This code is available under the Apache License, version 2: http://www.apache.or
             <artifactId>snakeyaml</artifactId>
             <version>1.15</version>
         </dependency>
-        
+
         <!-- testing -->
         <dependency>
             <groupId>junit</groupId>
