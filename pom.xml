@@ -88,18 +88,22 @@
             <artifactId>compiler</artifactId>
             <version>0.9.5</version>
             <exclusions>
+                <!--
                 <exclusion>
                     <groupId>com.google.guava</groupId>
                     <artifactId>guava</artifactId>
                 </exclusion>
+                -->
             </exclusions>
         </dependency>
 
+        <!-- Not sure why this was here - maybe just for older compiler version?
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>21.0</version>
         </dependency>
+        -->
 
         <dependency>
             <groupId>commons-io</groupId>
