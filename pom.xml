@@ -6,6 +6,10 @@
     <artifactId>merge-yml</artifactId>
     <version>1.0.1-SNAPSHOT</version>
 
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
     <licenses>
         <license>
             <comments>
@@ -17,6 +21,25 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
+
+    <developers>
+        <developer>
+            <name>Ondrej Zizka</name>
+            <email>zizka@seznam.cz</email>
+            <organization>Blackboard</organization>
+            <organizationUrl>http://www.blackboard.com/</organizationUrl>
+        </developer>
+        <developer>
+            <name>Jonathan Cobb</name>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git://github.com/OndraZizka/merge-yml.git</connection>
+        <developerConnection>scm:git:ssh://github.com:OndraZizka/merge-yml.git</developerConnection>
+        <url>https://github.com/OndraZizka/merge-yml/</url>
+    </scm>
+    <url>https://github.com/OndraZizka/merge-yml/</url>
 
     <dependencies>
 
@@ -86,18 +109,14 @@
                         <executions>
                             <execution>
                                 <phase>package</phase>
-                                <goals>
-                                    <goal>shade</goal>
-                                </goals>
+                                <goals><goal>shade</goal></goals>
                                 <configuration>
                                     <transformers>
                                         <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                             <mainClass>org.cobbzilla.util.yml.main.MergeYml</mainClass>
                                         </transformer>
                                     </transformers>
-                                    <!-- Exclude signed jars to avoid errors
-                                    see: http://stackoverflow.com/a/6743609/1251543
-                                    -->
+                                    <!-- Exclude signed jars to avoid errors, see: http://stackoverflow.com/a/6743609/1251543 -->
                                     <filters>
                                         <filter>
                                             <artifact>*:*</artifact>
@@ -115,10 +134,33 @@
                 </plugins>
             </build>
         </profile>
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+
+                    <!-- Sources & Javadoc -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>3.0.1</version>
+                        <executions><execution><id>attach-sources</id><goals><goal>jar-no-fork</goal></goals></execution></executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>3.0.1</version>
+                        <executions><execution><id>attach-javadocs</id><goals><goal>jar</goal></goals></execution></executions>
+                    </plugin>
+
+                </plugins>
+            </build>
+        </profile>
     </profiles>
 
     <build>
         <plugins>
+
             <!-- Use Java 1.7 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -130,6 +172,7 @@
                     <showWarnings>true</showWarnings>
                 </configuration>
             </plugin>
+
         </plugins>
     </build>
 
