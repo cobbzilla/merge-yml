@@ -5,7 +5,7 @@
 
 Merges multiple YAML files into a single file, and substitutes environment variables found as `{{VARIABLE_NAME}}`.
 
-This is a fork by Ondrej Zizka, with upgraded dependencies. Soon to be released. (once I get an approval from Sonatype). 
+This is a fork by Ondrej Zizka, with upgraded dependencies. Soon to be released (once I get an approval from Sonatype). 
 
 Original code from 2013 by Jonathan Cobb.
 This code is available under the Apache License, version 2: http://www.apache.org/licenses/LICENSE-2.0.html
