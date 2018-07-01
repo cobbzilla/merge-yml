@@ -12,7 +12,7 @@ This code is available under the Apache License, version 2: http://www.apache.or
 
 ## Build
 
-    mvn -P uberjar package
+    mvn -Drelease install
     
 Requires [Maven build automation tool](http://maven.apache.org/).
 

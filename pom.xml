@@ -202,6 +202,21 @@
                                     </arguments>
                                 </configuration>
                             </execution>
+                            <execution>
+                                <id>testMerge-layeredConfig</id>
+                                <phase>integration-test</phase>
+                                <goals><goal>exec</goal></goals>
+                                <configuration>
+                                    <arguments>
+                                        <argument>-jar</argument>
+                                        <argument>${project.build.directory}/${project.build.finalName}.jar</argument>
+                                        <argument> ${project.build.testResourceDirectory}/layeredConfig/0-defaults.yaml</argument>
+                                        <argument> ${project.build.testResourceDirectory}/layeredConfig/1-paths.yaml</argument>
+                                        <argument> ${project.build.testResourceDirectory}/layeredConfig/2-locations.yaml</argument>
+                                        <argument> ${project.build.testResourceDirectory}/layeredConfig/3-secrets.yaml</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
                         </executions>
                         <configuration>
                             <executable>java</executable>
