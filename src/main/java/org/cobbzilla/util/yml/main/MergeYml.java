@@ -1,5 +1,10 @@
 package org.cobbzilla.util.yml.main;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import org.cobbzilla.util.yml.YmlMerger;
 
 /**
@@ -9,7 +14,20 @@ import org.cobbzilla.util.yml.YmlMerger;
 public class MergeYml {
 
     public static void main (String[] args) throws Exception {
-        System.out.println(new YmlMerger().mergeToString(args));
+
+        YmlMerger yamlMerger = new YmlMerger();
+        yamlMerger.setVariablesToReplace(System.getenv());
+
+        Set<Path> filesToMerge = new LinkedHashSet<>();
+
+        //Arrays.asList(args).stream().map(Paths::get).collect(Collectors.toSet());
+        for (String arg : args) {
+            filesToMerge.add(Paths.get(arg));
+        }
+
+        String resultingYaml = yamlMerger.mergeToString(filesToMerge);
+
+        System.out.println(resultingYaml);
     }
 
 }

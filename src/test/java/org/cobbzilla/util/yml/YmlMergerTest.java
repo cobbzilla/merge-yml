@@ -34,13 +34,13 @@ public class YmlMergerTest {
     @SuppressWarnings({ "deprecation", "unchecked" })
 	@Test
     public void testMerge2Files () throws Exception {
-        final Map<String, Object> merged = merger.merge(new String[]{YAML_1, YAML_2});
+        final Map<String, Object> merged = merger.mergeYamlFiles(new String[]{YAML_1, YAML_2});
         Map<String, Object> dbconfig;
         dbconfig = (Map<String, Object>) merged.get("database");
         assertEquals("wrong user", dbconfig.get("user"), "alternate-user");
         assertEquals("wrong db url", dbconfig.get("url"), "jdbc:mysql://localhost:3306/some-db");
 
-        final String mergedYmlString = merger.toString(merged);
+        final String mergedYmlString = merger.exportToString(merged);
         LOG.info("Resulting YAML: \n"+ mergedYmlString);
 
         final Map<String, Object> reloadedYaml = (Map<String, Object>) yaml.load(mergedYmlString);
@@ -54,7 +54,7 @@ public class YmlMergerTest {
     @SuppressWarnings({ "deprecation", "unchecked" })
 	@Test
     public void testMergeFileIntoSelf () throws Exception {
-        final Map<String, Object> merged = merger.merge(new String[]{YAML_1, YAML_1});
+        final Map<String, Object> merged = merger.mergeYamlFiles(new String[]{YAML_1, YAML_1});
         final Map<String, Object> dbconfig = (Map<String, Object>) merged.get("database");
         assertEquals("wrong user", dbconfig.get("user"), "some-user");
         assertEquals("wrong db url", dbconfig.get("url"), "jdbc:mysql://localhost:3306/some-db");
@@ -63,7 +63,7 @@ public class YmlMergerTest {
     @SuppressWarnings("deprecation")
 	@Test
     public void testNullValue () throws Exception {
-        final Map<String, Object> merged = merger.merge(new String[]{YAML_NULL});
+        final Map<String, Object> merged = merger.mergeYamlFiles(new String[]{YAML_NULL});
         assertNotNull(merged.get("prop1"));
         assertNull(merged.get("prop2"));
     }
@@ -71,7 +71,8 @@ public class YmlMergerTest {
     @SuppressWarnings({ "deprecation", "unchecked" })
 	@Test
     public void testSubstitutionValueWithColon () throws Exception {
-        final Map<String, Object> merged = new YmlMerger(Collections.singletonMap("ENV_VAR", "localhost")).merge(new String[]{YAML_COLON});
+        Map<String, String> variables = Collections.singletonMap("ENV_VAR", "localhost");
+        final Map<String, Object> merged = new YmlMerger().setVariablesToReplace(variables).mergeYamlFiles(new String[]{YAML_COLON});
         final Map<String, Object> hash = (Map<String, Object>) merged.get("memcache");
         assertEquals(hash.get("one_key"), "value1");
         assertEquals(hash.get("another_key"), "localhost:22133");
@@ -81,7 +82,7 @@ public class YmlMergerTest {
     @SuppressWarnings({ "unchecked", "deprecation"})
 	@Test
     public void testMerge2Lists () throws Exception {
-        final Map<String, Object> merged = merger.merge(new String[]{MERGE_YAML_1, MERGE_YAML_2});
+        final Map<String, Object> merged = merger.mergeYamlFiles(new String[]{MERGE_YAML_1, MERGE_YAML_2});
         Map<String, Object> hash1 = (Map<String, Object>) merged.get("hashlevel1");
         List<Object> list1 = (List<Object>) hash1.get("listlevel2");
         assertEquals("NotEnoughEntries", list1.size(), 2);
