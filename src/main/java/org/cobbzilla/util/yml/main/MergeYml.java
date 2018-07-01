@@ -2,8 +2,10 @@ package org.cobbzilla.util.yml.main;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 import org.cobbzilla.util.yml.YmlMerger;
 
@@ -18,7 +20,7 @@ public class MergeYml {
         YmlMerger yamlMerger = new YmlMerger();
         yamlMerger.setVariablesToReplace(System.getenv());
 
-        Set<Path> filesToMerge = new LinkedHashSet<>();
+        List<Path> filesToMerge = new ArrayList<>();
 
         //Arrays.asList(args).stream().map(Paths::get).collect(Collectors.toSet());
         for (String arg : args) {
