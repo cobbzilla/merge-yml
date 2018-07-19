@@ -6,7 +6,7 @@
 
     <groupId>ch.zizka.yaml.merge</groupId>
     <artifactId>yaml-merge</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.1-SNAPSHOT</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -38,12 +38,11 @@
     </developers>
 
     <scm>
-        <connection>scm:git:git://1github.com/OndraZizka/yaml-merge.git</connection>
-        <developerConnection>scm:git:git@2github.com:OndraZizka/yaml-merge.git</developerConnection>
-        <url>https://3github.com/OndraZizka/yaml-merge/</url>
-        <tag>yaml-merge-1.0.1</tag>
+        <connection>scm:git:git://github.com/OndraZizka/yaml-merge.git</connection>
+        <developerConnection>scm:git:git@github.com:OndraZizka/yaml-merge.git</developerConnection>
+        <url>https://github.com/OndraZizka/yaml-merge/</url>
     </scm>
-    <url>https://4github.com/OndraZizka/yaml-merge/</url>
+    <url>https://github.com/OndraZizka/yaml-merge/</url>
 
     <distributionManagement>
         <snapshotRepository>
