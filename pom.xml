@@ -38,7 +38,7 @@
     </developers>
 
     <scm>
-        <connection>scm:git:git://github.com/OndraZizka/yaml-merge.git</connection>
+        <connection>scm:git:git://github.com/OndraZizkax/yaml-merge.git</connection>
         <developerConnection>scm:git:git@github.com:OndraZizka/yaml-merge.git</developerConnection>
         <url>https://github.com/OndraZizka/yaml-merge/</url>
         <tag>yaml-merge-1.0.1</tag>
