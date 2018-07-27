@@ -1,0 +1,19 @@
+general:
+  apolloUrl: https://foo.example.com-overlay2
+  tliUrl: https://foo.example.com-overlay2
+  passwordResetUrl: https://foo.example.com/change-password-overlay2
+
+launchApi:
+  claBaseUrl: https://foo-cls.example.com-overlay2
+
+database:
+  url: jdbc:postgresql://localhost:5432/mydb-overlay2
+
+email:
+  smtpServerHostname: localhost-overlay2
+
+contentRepository:
+  s3Url: https://s3.amazonaws.com-overlay2
+
+streamingService:
+  apiBaseUrl: https://foo-sms.example.com-overlay2

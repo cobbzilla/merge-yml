@@ -1,62 +1,96 @@
 package org.cobbzilla.util.yml;
 
 import com.github.mustachejava.DefaultMustacheFactory;
-
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TimeZone;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
-
-import java.io.*;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * (c) Copyright 2013-2015 Jonathan Cobb
  * This code is available under the Apache License, version 2: http://www.apache.org/licenses/LICENSE-2.0.html
  */
-public class YmlMerger {
+public class YmlMerger
+{
 
     private static final Logger LOG = LoggerFactory.getLogger(YmlMerger.class);
     public static final DefaultMustacheFactory DEFAULT_MUSTACHE_FACTORY = new DefaultMustacheFactory();
 
-    private final Yaml yaml = new Yaml();
-    private final Map<String, Object> scope = new HashMap<String, Object>();;
+    private final Yaml snakeYaml;
+    private Map<String, Object> variablesToReplace = new HashMap<String, Object>();
 
-    public YmlMerger() { init(System.getenv()); }
-
-    public YmlMerger(Map<String, String> env) { if (env != null) init(env); }
-
-    private void init(Map<String, String> env) {
-        for (String varname : env.keySet()) {
-            scope.put(varname, env.get(varname));
-        }
+    public YmlMerger()
+    {
+        // See https://github.com/spariev/snakeyaml/blob/master/src/test/java/org/yaml/snakeyaml/DumperOptionsTest.java
+        DumperOptions dumperOptions = new DumperOptions();
+        dumperOptions.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
+        dumperOptions.setPrettyFlow(true);
+        //dumperOptions.setCanonical(true);
+        dumperOptions.setTimeZone(TimeZone.getTimeZone("UTC"));
+        this.snakeYaml = new Yaml(dumperOptions);
     }
 
-    @SuppressWarnings("unchecked")
-	public Map<String, Object> merge(String[] files) throws IOException {
+    public YmlMerger setVariablesToReplace(Map<String, String> vars) {
+        this.variablesToReplace.clear();
+        this.variablesToReplace.putAll(vars);
+        return this;
+    }
+
+
+
+    public Map<String, Object> mergeYamlFiles(String[] pathsStr) throws IOException {
+        return mergeYamlFiles(stringsToPaths(pathsStr));
+    }
+
+    /**
+     * Merges the files at given paths to a map representing the resulting YAML structure.
+     */
+    public Map<String, Object> mergeYamlFiles(List<Path> paths) throws IOException
+    {
         Map<String, Object> mergedResult = new LinkedHashMap<String, Object>();
-        for (String file : files) {
+        for (Path yamlFilePath : paths) {
             InputStream in = null;
             try {
-                // read the file into a String
+                File file = yamlFilePath.toFile();
+                if (!file.exists())
+                    throw new FileNotFoundException("YAML file to merge not found: " + file.getCanonicalPath());
+
+                // Read the YAML file into a String
                 in = new FileInputStream(file);
                 final String entireFile = IOUtils.toString(in);
 
-                // substitute variables
-                final StringWriter writer = new StringWriter(entireFile.length() + 10);
-                DEFAULT_MUSTACHE_FACTORY.compile(new StringReader(entireFile), "mergeyml_"+System.currentTimeMillis()).execute(writer, scope);
+                // Substitute variables. TODO: This should be done by a resolver when parsing.
+                int bufferSize = entireFile.length() + 100;
+                final StringWriter writer = new StringWriter(bufferSize);
+                DEFAULT_MUSTACHE_FACTORY.compile(new StringReader(entireFile), "yaml-mergeYamlFiles-" + System.currentTimeMillis()).execute(writer, variablesToReplace);
 
-                // load the YML file
-                final Map<String, Object> yamlContents = (Map<String, Object>) yaml.load(writer.toString());
+                // Parse the YAML.
+                String yamlString = writer.toString();
+                final Map<String, Object> yamlToMerge = (Map<String, Object>) this.snakeYaml.load(yamlString);
 
-                // merge into results map
-                merge_internal(mergedResult, yamlContents);
-                LOG.info("loaded YML from "+file+": "+yamlContents);
-
-            } finally {
+                // Merge into results map.
+                mergeStructures(mergedResult, yamlToMerge);
+                LOG.debug("Loaded YAML from " + yamlFilePath + ": " + yamlToMerge);
+            }
+            finally {
                 if (in != null) in.close();
             }
         }
@@ -64,88 +98,112 @@ public class YmlMerger {
     }
 
     @SuppressWarnings("unchecked")
-	private void merge_internal(Map<String, Object> mergedResult, Map<String, Object> yamlContents) {
+    private void mergeStructures(Map<String, Object> targetTree, Map<String, Object> sourceTree)
+    {
+        if (sourceTree == null)  return;
 
-        if (yamlContents == null) return;
+        for (String key : sourceTree.keySet()) {
 
-        for (String key : yamlContents.keySet()) {
-
-            Object yamlValue = yamlContents.get(key);
+            Object yamlValue = sourceTree.get(key);
             if (yamlValue == null) {
-                addToMergedResult(mergedResult, key, yamlValue);
+                addToMergedResult(targetTree, key, yamlValue);
                 continue;
             }
 
-            Object existingValue = mergedResult.get(key);
+            Object existingValue = targetTree.get(key);
             if (existingValue != null) {
                 if (yamlValue instanceof Map) {
                     if (existingValue instanceof Map) {
-                        merge_internal((Map<String, Object>) existingValue, (Map<String, Object>)  yamlValue);
-                    } else if (existingValue instanceof String) {
-                        throw new IllegalArgumentException("Cannot merge complex element into a simple element: "+key);
-                    } else {
+                        mergeStructures((Map<String, Object>) existingValue, (Map<String, Object>) yamlValue);
+                    }
+                    else if (existingValue instanceof String) {
+                        throw new IllegalArgumentException("Cannot mergeYamlFiles complex element into a simple element: " + key);
+                    }
+                    else {
                         throw unknownValueType(key, yamlValue);
                     }
-                } else if (yamlValue instanceof List) {
-                	mergeLists(mergedResult, key, yamlValue);
+                }
+                else if (yamlValue instanceof List) {
+                    mergeLists(targetTree, key, yamlValue);
 
-                } else if (yamlValue instanceof String
+                }
+                else if (yamlValue instanceof String
                         || yamlValue instanceof Boolean
                         || yamlValue instanceof Double
-                        || yamlValue instanceof Integer) {
-                    LOG.info("overriding value of "+key+" with value "+yamlValue);
-                    addToMergedResult(mergedResult, key, yamlValue);
+                        || yamlValue instanceof Integer)
+                {
+                    LOG.debug("Overriding value of " + key + " with value " + yamlValue);
+                    addToMergedResult(targetTree, key, yamlValue);
 
-                } else {
+                }
+                else {
                     throw unknownValueType(key, yamlValue);
                 }
 
-            } else {
+            }
+            else {
                 if (yamlValue instanceof Map
                         || yamlValue instanceof List
                         || yamlValue instanceof String
                         || yamlValue instanceof Boolean
                         || yamlValue instanceof Integer
-                        || yamlValue instanceof Double) {
-                    LOG.info("adding new key->value: "+key+"->"+yamlValue);
-                    addToMergedResult(mergedResult, key, yamlValue);
-                } else {
+                        || yamlValue instanceof Double)
+                {
+                    LOG.debug("Adding new key->value: " + key + " -> " + yamlValue);
+                    addToMergedResult(targetTree, key, yamlValue);
+                }
+                else {
                     throw unknownValueType(key, yamlValue);
                 }
             }
         }
     }
 
-    private IllegalArgumentException unknownValueType(String key, Object yamlValue) {
-        final String msg = "Cannot merge element of unknown type: " + key + ": " + yamlValue.getClass().getName();
+    private static IllegalArgumentException unknownValueType(String key, Object yamlValue)
+    {
+        final String msg = "Cannot mergeYamlFiles element of unknown type: " + key + ": " + yamlValue.getClass().getName();
         LOG.error(msg);
         return new IllegalArgumentException(msg);
     }
 
-    private Object addToMergedResult(Map<String, Object> mergedResult, String key, Object yamlValue) {
+    private static Object addToMergedResult(Map<String, Object> mergedResult, String key, Object yamlValue)
+    {
         return mergedResult.put(key, yamlValue);
     }
-    
+
     @SuppressWarnings("unchecked")
-	private void mergeLists(Map<String, Object> mergedResult, String key, Object yamlValue) {
-    	if (! (yamlValue instanceof List && mergedResult.get(key) instanceof List)) {
-    		throw new IllegalArgumentException("Cannot merge a list with a non-list: "+key);
-    	}
-    	
-    	List<Object> originalList = (List<Object>) mergedResult.get(key);
-    	originalList.addAll((List<Object>) yamlValue);
+    private static void mergeLists(Map<String, Object> mergedResult, String key, Object yamlValue)
+    {
+        if (!(yamlValue instanceof List && mergedResult.get(key) instanceof List)) {
+            throw new IllegalArgumentException("Cannot mergeYamlFiles a list with a non-list: " + key);
+        }
+
+        List<Object> originalList = (List<Object>) mergedResult.get(key);
+        originalList.addAll((List<Object>) yamlValue);
     }
 
-    public String mergeToString(String[] files) throws IOException {
-        return toString(merge(files));
+
+    public String mergeToString(List<Path> filesToMerge) throws IOException
+    {
+        Map<String, Object> merged = mergeYamlFiles(filesToMerge);
+        return exportToString(merged);
     }
 
-    public String mergeToString(List<String> files) throws IOException {
-        return toString(merge(files.toArray(new String[files.size()])));
+    public String exportToString(Map<String, Object> merged)
+    {
+        return snakeYaml.dump(merged);
     }
 
-    public String toString(Map<String, Object> merged) {
-        return yaml.dump(merged);
+    // Util methods
+
+    public static List<Path> stringsToPaths(String[] pathsStr) {
+        Set<Path> paths = new LinkedHashSet<>();
+        for (String pathStr : pathsStr) {
+            paths.add(Paths.get(pathStr));
+        }
+        List<Path> pathsList = new ArrayList<>(paths.size());
+        pathsList.addAll(paths);
+        return pathsList;
     }
 
 }

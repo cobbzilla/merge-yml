@@ -1,0 +1,8 @@
+
+logging:
+  appenders:
+  - type: file-overlay1
+    threshold: INFO-overlay1
+    currentLogFilename: /tmp/bar-logs/bar.log-overlay1
+    archivedLogFilenamePattern: /tmp/bar-logs/bar-%d.log.gz-overlay1
+    archivedFileCount: 5
