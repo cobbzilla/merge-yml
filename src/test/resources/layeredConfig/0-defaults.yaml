@@ -1,0 +1,93 @@
+server:
+  applicationConnectors:
+  - type: http
+    port: 9000
+  adminConnectors:
+  - type: http
+    port: 9001
+
+authorization:
+  accessTokenJwtSecret: mysecretToken
+  accessTokenJwtTime: 30
+  accessTliTokenJwtSecret: mysecretLti
+  accessTliTokenJwtTime: 1
+  assetJwtSecret: mysecretAsset
+  sasInteractionJwtSecret: mysecret
+  launchTokenJwtExpirationTime: 250
+  passwordResetJwtExpiration: 150
+
+general:
+  apolloUrl: https://foo.example.com
+  tliUrl: https://foo.example.com
+  tliPath: /somePath
+  passwordResetUrl: https://foo.example.com/change-password
+  sasTimezone: EST5EDT
+  limitOAuthConsumerResource: 50
+  limitLoginGroupResource: 60
+
+launchApi:
+  claBaseUrl: https://foo-cls.example.com
+  claJwtSecret: mysecretToken
+  claJwtExpirationTime: 777
+  claQueryTimeout: 7777
+
+database:
+  #url: jdbc:postgresql://foo-rds.example.com:5432/mydb
+  url: jdbc:postgresql://localhost:5432/mydb
+  user: mydb
+  password: mydb
+  driverClass: org.postgresql.Driver
+  type: javax.sql.DataSource
+  factory: pool.DataSourceFactory
+  poolInitialSize: 5
+  poolMaxSize: 10
+  poolMinSize: 5
+  poolTestQuery: SELECT 1
+  poolIdeTestSeconds: 777
+  poolUnreturnedTimeoutSeconds: 7777
+  poolTestOnCheckOut: true
+  poolDebugUnreturned: true
+
+telephony:
+  phoneNumber: 555-555-5309
+
+loginGroup:
+  defaultSessionSize: 77
+  maxSessionSize: 777
+
+passwordPolicy:
+  defaultPolicy:
+    minimumDistinctCharacters: 7
+    minimumLength: 77
+  rolePolicies:
+    root:
+      minimumLength: 77
+    administrator:
+      minimumLength: 777
+
+email:
+  smtpServerHostname: localhost
+  smtpPort: 25
+  emailSenderAddress: notification-service@example.com
+  emailSenderName: Test Testovič
+
+contentRepository:
+  awsAccessKey: BFLMPSVZ
+  awsSecretKey: HYCHYKYRYDYTYNY+w6
+  awsAnonymousMode: true
+  s3BucketName: foo-container
+  s3Url: https://s3.amazonaws.com
+
+streamingService:
+  sharedSecret: mysecretfoo
+  id: Foo-Some
+  tokenExpiryMins: 30
+  apiBaseUrl: https://foo-sms.example.com
+
+logging:
+  appenders:
+  - type: file
+    threshold: INFO
+    currentLogFilename: /tmp/bar-logs/bar.log
+    archivedLogFilenamePattern: /tmp/bar-logs/bar-%d.log.gz
+    archivedFileCount: 5
